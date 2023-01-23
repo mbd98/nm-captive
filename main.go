@@ -34,7 +34,7 @@ func main() {
 				log.Printf("Other state change %v\n", state)
 			}
 		} else {
-			log.Printf("Other state change %v\n", sig)
+			log.Printf("Other signal %v\n", sig)
 		}
 	}
 }

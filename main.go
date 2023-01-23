@@ -10,9 +10,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer func() {
-		nm.Unsubscribe()
-	}()
+	defer nm.Unsubscribe()
 	ch := nm.Subscribe()
 	for {
 		sig := <-ch

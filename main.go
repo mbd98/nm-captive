@@ -10,6 +10,9 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer func() {
+		nm.Unsubscribe()
+	}()
 	ch := nm.Subscribe()
 	for {
 		sig := <-ch
@@ -18,11 +21,11 @@ func main() {
 			if state == gonetworkmanager.NmStateConnectedSite {
 				err := nm.CheckConnectivity()
 				if err != nil {
-					log.Fatalln(err)
+					log.Panicln(err)
 				}
 				connectivity, err := nm.GetPropertyConnectivity()
 				if err != nil {
-					log.Fatalln(err)
+					log.Panicln(err)
 				}
 				if connectivity == gonetworkmanager.NmConnectivityPortal {
 					log.Println("Captive portal detected")

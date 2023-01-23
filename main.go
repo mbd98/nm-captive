@@ -28,11 +28,13 @@ func main() {
 				if connectivity == gonetworkmanager.NmConnectivityPortal {
 					log.Println("Captive portal detected")
 				} else {
-					log.Println("Other connectivity state")
+					log.Printf("Other connectivity state %v\n", connectivity)
 				}
+			} else {
+				log.Printf("Other state change %v\n", state)
 			}
 		} else {
-			log.Println("Other state change")
+			log.Printf("Other state change %v\n", sig)
 		}
 	}
 }

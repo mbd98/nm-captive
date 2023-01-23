@@ -1,0 +1,23 @@
+name: nm-captive
+base: core22
+version: 0.0.0
+#adopt-info: nm-captive
+summary: Listens for changes in network connectivity state
+description: |
+  This program will print a message whenever NetworkManager detects a captive portal
+grade: devel
+confinement: devmode
+
+parts:
+  nm-captive:
+    build-snaps:
+      - go
+    plugin: go
+    source: .
+
+apps:
+  nm-captive:
+    command: bin/nm-captive
+    slots:
+      - network-manager
+

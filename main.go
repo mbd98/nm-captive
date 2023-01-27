@@ -15,26 +15,17 @@ func main() {
 	for {
 		sig := <-ch
 		if sig.Name == "org.freedesktop.NetworkManager.Device.StateChanged" {
-			state := gonetworkmanager.NmState(sig.Body[0].(uint32))
-			if state == gonetworkmanager.NmStateConnectedSite {
-				err := nm.CheckConnectivity()
-				if err != nil {
-					log.Panicln(err)
-				}
-				connectivity, err := nm.GetPropertyConnectivity()
-				if err != nil {
-					log.Panicln(err)
-				}
-				if connectivity == gonetworkmanager.NmConnectivityPortal {
-					log.Println("Captive portal detected")
-				} else {
-					log.Printf("Other connectivity state %v\n", connectivity)
-				}
-			} else {
-				log.Printf("Other state change %v\n", state)
+			err := nm.CheckConnectivity()
+			if err != nil {
+				log.Panicln(err)
 			}
-		} else {
-			log.Printf("Other signal %v\n", sig)
+			connectivity, err := nm.GetPropertyConnectivity()
+			if err != nil {
+				log.Panicln(err)
+			}
+			if connectivity == gonetworkmanager.NmConnectivityPortal {
+				log.Println("Captive portal detected")
+			}
 		}
 	}
 }

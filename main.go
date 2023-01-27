@@ -25,8 +25,6 @@ func main() {
 			}
 			if connectivity == gonetworkmanager.NmConnectivityPortal {
 				log.Println("Captive portal detected")
-			} else {
-				log.Println("No captive portal")
 			}
 		}
 	}

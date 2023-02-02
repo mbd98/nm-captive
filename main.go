@@ -7,17 +7,16 @@ import (
 )
 
 func determineUrl() {
-	resp, err := http.Get("http://detectportal.firefox.com/canonical.html")
+	req, err := http.NewRequest(http.MethodHead, "http://detectportal.firefox.com/canonical.html", nil)
+	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0")
 	if err != nil {
 		log.Panicln(err)
 	}
-	log.Println(resp)
-	loc, err := resp.Location()
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Println(err)
-	} else {
-		log.Printf("Portal URL: %v\n", loc)
+		log.Panicln(err)
 	}
+	log.Println(resp.Header)
 }
 
 func main() {

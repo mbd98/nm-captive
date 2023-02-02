@@ -6,13 +6,24 @@ import (
 	"net/http"
 )
 
+func checkRedirect(req *http.Request, via []*http.Request) error {
+	log.Println(req.RequestURI)
+	log.Println(req.URL)
+	for _, v := range via {
+		log.Println(v.RequestURI)
+		log.Println(v.URL)
+	}
+	return nil
+}
+
 func determineUrl() {
+	client := &http.Client{CheckRedirect: checkRedirect}
 	req, err := http.NewRequest(http.MethodHead, "http://detectportal.firefox.com/canonical.html", nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0")
 	if err != nil {
 		log.Panicln(err)
 	}
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		log.Panicln(err)
 	}

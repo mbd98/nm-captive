@@ -2,19 +2,18 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"github.com/Wifx/gonetworkmanager/v2"
 	"log"
 	"net/http"
 )
 
-func determineUrl() {
+func printPortalBody() {
 	resp, err := http.Get("http://detectportal.firefox.com/canonical.html")
 	if err == nil {
-		log.Println(resp.Header)
-		log.Println()
 		scan := bufio.NewScanner(resp.Body)
 		for scan.Scan() {
-			log.Println(scan.Text())
+			fmt.Println(scan.Text())
 		}
 		err := scan.Err()
 		if err != nil {
@@ -49,7 +48,7 @@ func main() {
 			}
 			if connectivity == gonetworkmanager.NmConnectivityPortal {
 				log.Println("Captive portal detected")
-				go determineUrl()
+				go printPortalBody()
 			}
 		}
 	}

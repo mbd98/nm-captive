@@ -11,16 +11,21 @@ func determineUrl() {
 	resp, err := http.Get("http://detectportal.firefox.com/canonical.html")
 	if err == nil {
 		log.Println(resp.Header)
+		log.Println()
 		scan := bufio.NewScanner(resp.Body)
 		for scan.Scan() {
 			log.Println(scan.Text())
 		}
-		err := resp.Body.Close()
+		err := scan.Err()
 		if err != nil {
-			log.Println(err)
+			log.Printf("Error reading body: %v\n", err)
+		}
+		err = resp.Body.Close()
+		if err != nil {
+			log.Printf("Error closing body: %v\n", err)
 		}
 	} else {
-		log.Println(err)
+		log.Printf("Error making request: %v\n", err)
 	}
 }
 

@@ -11,11 +11,13 @@ func determineUrl() {
 	if err != nil {
 		log.Panicln(err)
 	}
+	log.Println(resp)
 	loc, err := resp.Location()
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
+	} else {
+		log.Printf("Portal URL: %v\n", loc)
 	}
-	log.Printf("Portal URL: %v\n", loc)
 }
 
 func main() {

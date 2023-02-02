@@ -20,4 +20,3 @@ apps:
     command: bin/nm-captive
     slots:
       - network-manager
-

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Wifx/gonetworkmanager/v2"
 	"log"
+	"net/http"
 )
 
 func main() {
@@ -25,6 +26,15 @@ func main() {
 			}
 			if connectivity == gonetworkmanager.NmConnectivityPortal {
 				log.Println("Captive portal detected")
+				resp, err := http.Get("http://detectportal.firefox.com/canonical.html")
+				if err != nil {
+					log.Panicln(err)
+				}
+				loc, err := resp.Location()
+				if err != nil {
+					log.Panicln(err)
+				}
+				log.Printf("Portal URL: %v\n", loc)
 			}
 		}
 	}

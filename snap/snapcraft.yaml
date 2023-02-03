@@ -20,5 +20,7 @@ parts:
 apps:
   nm-captive:
     command: bin/nm-captive
-    slots:
-      - network-manager
+
+plugs:
+  nm-link:
+    interface: network-manager-observe

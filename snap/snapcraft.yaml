@@ -23,4 +23,4 @@ apps:
 
 plugs:
   nm-link:
-    interface: network-manager-observe
+    interface: network-manager

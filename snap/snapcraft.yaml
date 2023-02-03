@@ -1,7 +1,6 @@
-name: nm-captive
+name: mbd-nm-captive
 base: core22
-version: 0.0.0
-#adopt-info: nm-captive
+adopt-info: nm-captive
 summary: Listens for changes in network connectivity state
 description: |
   This program will print a message whenever NetworkManager detects a captive portal
@@ -14,6 +13,9 @@ parts:
       - go
     plugin: go
     source: .
+    override-pull: |
+      craftctl default
+      craftctl set version="$(git rev-parse --short HEAD)"
 
 apps:
   nm-captive:

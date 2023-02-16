@@ -25,7 +25,7 @@ func checkConnectivity(nm gonetworkmanager.NetworkManager) {
 }
 
 func handleStateChange(nm gonetworkmanager.NetworkManager, state gonetworkmanager.NmState) {
-	log.Println("state changed")
+	log.Printf("state changed: %v\n", state)
 	switch state {
 	// https://networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMState
 	case gonetworkmanager.NmStateConnecting:
@@ -36,7 +36,7 @@ func handleStateChange(nm gonetworkmanager.NetworkManager, state gonetworkmanage
 }
 
 func handleDeviceStateChange(nm gonetworkmanager.NetworkManager, state gonetworkmanager.NmDeviceState) {
-	log.Println("device state changed")
+	log.Printf("device state changed: %v\n", state)
 	switch state {
 	// https://networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMDeviceState
 	case gonetworkmanager.NmDeviceStateNeedAuth:

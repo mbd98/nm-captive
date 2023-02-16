@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/Wifx/gonetworkmanager/v2"
 	"log"
 )
@@ -18,11 +19,13 @@ func checkConnectivity(nm gonetworkmanager.NetworkManager) {
 	}
 	// Portal detected? https://networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMConnectivityState
 	if connectivity == gonetworkmanager.NmConnectivityPortal {
-		log.Println("Captive portal detected!  You probably want to open a web browser now.")
+		log.Println("Captive portal detected")
+		fmt.Println("You probably want to open a web browser now.")
 	}
 }
 
 func handleStateChange(nm gonetworkmanager.NetworkManager, state gonetworkmanager.NmState) {
+	log.Println("state changed")
 	switch state {
 	// https://networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMState
 	case gonetworkmanager.NmStateConnecting:
@@ -33,6 +36,7 @@ func handleStateChange(nm gonetworkmanager.NetworkManager, state gonetworkmanage
 }
 
 func handleDeviceStateChange(nm gonetworkmanager.NetworkManager, state gonetworkmanager.NmDeviceState) {
+	log.Println("device state changed")
 	switch state {
 	// https://networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMDeviceState
 	case gonetworkmanager.NmDeviceStateNeedAuth:

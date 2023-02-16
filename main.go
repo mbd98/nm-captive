@@ -1,30 +1,38 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
 	"github.com/Wifx/gonetworkmanager/v2"
 	"log"
-	"net/http"
 )
 
-func printPortalBody() {
-	resp, err := http.Get("http://detectportal.firefox.com/canonical.html")
-	if err == nil {
-		scan := bufio.NewScanner(resp.Body)
-		for scan.Scan() {
-			fmt.Println(scan.Text())
-		}
-		err := scan.Err()
-		if err != nil {
-			log.Printf("Error reading body: %v\n", err)
-		}
-		err = resp.Body.Close()
-		if err != nil {
-			log.Printf("Error closing body: %v\n", err)
-		}
-	} else {
-		log.Printf("Error making request: %v\n", err)
+func checkConnectivity(nm gonetworkmanager.NetworkManager) {
+	err := nm.CheckConnectivity()
+	if err != nil {
+		log.Panicln(err)
+	}
+	connectivity, err := nm.GetPropertyConnectivity()
+	if err != nil {
+		log.Panicln(err)
+	}
+	if connectivity == gonetworkmanager.NmConnectivityPortal {
+		log.Println("Captive portal detected!  You probably want to open a web browser now.")
+	}
+}
+
+func handleStateChange(nm gonetworkmanager.NetworkManager, state gonetworkmanager.NmState) {
+	switch state {
+	case gonetworkmanager.NmStateConnecting:
+	case gonetworkmanager.NmStateConnectedLocal:
+	case gonetworkmanager.NmStateConnectedSite:
+		checkConnectivity(nm)
+	}
+}
+
+func handleDeviceStateChange(nm gonetworkmanager.NetworkManager, state gonetworkmanager.NmDeviceState) {
+	switch state {
+	case gonetworkmanager.NmDeviceStateNeedAuth:
+	case gonetworkmanager.NmDeviceStateIpCheck:
+		checkConnectivity(nm)
 	}
 }
 
@@ -37,19 +45,13 @@ func main() {
 	ch := nm.Subscribe()
 	for {
 		sig := <-ch
-		if sig.Name == "org.freedesktop.NetworkManager.Device.StateChanged" {
-			err := nm.CheckConnectivity()
-			if err != nil {
-				log.Panicln(err)
-			}
-			connectivity, err := nm.GetPropertyConnectivity()
-			if err != nil {
-				log.Panicln(err)
-			}
-			if connectivity == gonetworkmanager.NmConnectivityPortal {
-				log.Println("Captive portal detected")
-				go printPortalBody()
-			}
+		switch sig.Name {
+		case "org.freedesktop.NetworkManager.StateChanged":
+			handleStateChange(nm, sig.Body[0].(gonetworkmanager.NmState))
+			break
+		case "org.freedesktop.NetworkManager.Device.StateChanged":
+			handleDeviceStateChange(nm, sig.Body[0].(gonetworkmanager.NmDeviceState))
+			break
 		}
 	}
 }

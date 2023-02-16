@@ -61,11 +61,11 @@ func main() {
 		switch sig.Name {
 		// https://networkmanager.dev/docs/api/latest/gdbus-org.freedesktop.NetworkManager.html#gdbus-signal-org-freedesktop-NetworkManager.StateChanged
 		case "org.freedesktop.NetworkManager.StateChanged":
-			handleStateChange(nm, sig.Body[0].(gonetworkmanager.NmState))
+			handleStateChange(nm, gonetworkmanager.NmState(sig.Body[0].(uint32)))
 			break
 		// https://networkmanager.dev/docs/api/latest/gdbus-org.freedesktop.NetworkManager.Device.html#gdbus-signal-org-freedesktop-NetworkManager-Device.StateChanged
 		case "org.freedesktop.NetworkManager.Device.StateChanged":
-			handleDeviceStateChange(nm, sig.Body[0].(gonetworkmanager.NmDeviceState))
+			handleDeviceStateChange(nm, gonetworkmanager.NmDeviceState(sig.Body[0].(uint32)))
 			break
 		}
 	}

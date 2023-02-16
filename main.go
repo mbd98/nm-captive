@@ -26,21 +26,16 @@ func checkConnectivity(nm gonetworkmanager.NetworkManager) {
 
 func handleStateChange(nm gonetworkmanager.NetworkManager, state gonetworkmanager.NmState) {
 	log.Printf("state changed: %v\n", state)
-	switch state {
 	// https://networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMState
-	case gonetworkmanager.NmStateConnecting:
-	case gonetworkmanager.NmStateConnectedLocal:
-	case gonetworkmanager.NmStateConnectedSite:
+	if state == gonetworkmanager.NmStateConnectedSite {
 		checkConnectivity(nm)
 	}
 }
 
 func handleDeviceStateChange(nm gonetworkmanager.NetworkManager, state gonetworkmanager.NmDeviceState) {
 	log.Printf("device state changed: %v\n", state)
-	switch state {
 	// https://networkmanager.dev/docs/api/latest/nm-dbus-types.html#NMDeviceState
-	case gonetworkmanager.NmDeviceStateNeedAuth:
-	case gonetworkmanager.NmDeviceStateIpCheck:
+	if state == gonetworkmanager.NmDeviceStateIpCheck {
 		checkConnectivity(nm)
 	}
 }

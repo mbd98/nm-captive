@@ -52,7 +52,7 @@ func main() {
 	for {
 		// Get the next signal
 		sig := <-ch
-		// Filter signals we care about
+		// Filter signals we care about - should be able to get by with just the one
 		switch sig.Name {
 		// https://networkmanager.dev/docs/api/latest/gdbus-org.freedesktop.NetworkManager.html#gdbus-signal-org-freedesktop-NetworkManager.StateChanged
 		case "org.freedesktop.NetworkManager.StateChanged":

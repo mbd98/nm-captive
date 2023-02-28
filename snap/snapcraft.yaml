@@ -4,7 +4,7 @@ adopt-info: nm-captive
 summary: Listens for changes in network connectivity state
 description: |
   This program will print a message whenever NetworkManager detects a captive portal
-grade: devel
+grade: stable
 confinement: strict
 
 parts:
@@ -24,3 +24,5 @@ apps:
 plugs:
   nm-link:
     interface: network-manager
+  netcontrol:
+    interface: network-control

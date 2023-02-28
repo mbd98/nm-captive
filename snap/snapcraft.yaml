@@ -24,5 +24,3 @@ apps:
 plugs:
   nm-link:
     interface: network-manager
-  netcontrol:
-    interface: network-control

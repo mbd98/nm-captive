@@ -2,33 +2,24 @@ package main
 
 import (
 	"fmt"
-	"github.com/Wifx/gonetworkmanager/v2"
+	"github.com/godbus/dbus/v5"
 	"log"
 )
 
 func main() {
-	nm, err := gonetworkmanager.NewNetworkManager()
+	bus, err := dbus.SystemBus()
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalf("Failed to connect to system bus: %v\n", err)
 	}
-	// Stop listening for signals when done
-	defer nm.Unsubscribe()
-	// Subscribe to the bus for new signals
-	ch := nm.Subscribe()
-	for {
-		sig := <-ch
-		if sig.Name == "org.freedesktop.NetworkManager.StateChanged" {
-			state := gonetworkmanager.NmState(sig.Body[0].(uint32))
-			if state == gonetworkmanager.NmStateConnectedSite {
-				c, err := nm.GetPropertyConnectivity()
-				if err != nil {
-					log.Panicln(err)
-				}
-				if c == gonetworkmanager.NmConnectivityPortal {
-					log.Println("Captive portal detected")
-					fmt.Println("You probably want to open a web browser now")
-				}
-			}
+	defer bus.Close()
+	if err = bus.AddMatchSignal(dbus.WithMatchObjectPath("/org/freedesktop/NetworkManager"), dbus.WithMatchInterface("org.freedesktop.DBus.Properties")); err != nil {
+		log.Fatalf("Failed to listen for signal: %v\n", err)
+	}
+	ch := make(chan *dbus.Signal, 16)
+	bus.Signal(ch)
+	for sig := range ch {
+		if sig.Name == "org.freedesktop.DBus.Properties.PropertiesChanged" {
+			fmt.Println(sig.Body)
 		}
 	}
 }

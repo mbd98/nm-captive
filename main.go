@@ -28,11 +28,7 @@ func main() {
 	for sig := range ch {
 		if sig.Name == "org.freedesktop.DBus.Properties.PropertiesChanged" {
 			m := sig.Body[1].(map[string]dbus.Variant)
-			var conn uint32
-			if err = m[NM_CONNECTIVITY].Store(conn); err != nil {
-				log.Panicf("Failed to read property value: %v\n", err)
-			}
-			if conn == NM_CONNECTIVITY_PORTAL {
+			if connvar, ok := m[NM_CONNECTIVITY]; ok && connvar.Value().(uint32) == NM_CONNECTIVITY_PORTAL {
 				fmt.Println("Portal detected.  Open a web browser to log in")
 			}
 		}
